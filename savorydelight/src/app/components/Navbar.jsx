@@ -24,7 +24,7 @@ export default function Navbar (){
             <div className='flex items-center justify-between'>
                 <div className='flex items-center space-x-3'>
                     <Image 
-                      src="/BlackLogo.png" // savory delight logo
+                      src="/blackLogo.png" // savory delight logo
                      alt="Logo" 
                      width={55}  
                      height={55}/>
