@@ -13,7 +13,12 @@ export default function AdminLayout ({ children }) {
             
             {!shouldHideSidebar && <AdminSidebar />}
 
-            <div className={'flex-1 p-4'}>{children}</div>
+            <div className={'flex-1 p-4'}>
+                
+                <div key={pathname}>
+                    {children}
+                </div>
+            </div>
         </div>
     );
 }

@@ -12,11 +12,11 @@ const MenuItemCard = ({ image, name, price, description, onAdd }) => {
       <div className="mt-3">
         <h3 className="text-black font-semibold">{name}</h3>
         <p className="text-gray-500 text-sm mb-2">{description}</p>
-        <p className="text-gray-900 mb-2">Rs. {price}.00</p>
+        <p className="text-gray-900 mb-2">Rs. {Number(price).toFixed(2)}</p>
 
         <button
           onClick={onAdd}
-          className="bg-orange-600 text-white px-4 py-1 rounded hover:bg-orange-600 transition"
+          className="bg-orange-600 text-white px-4 py-1 rounded hover:bg-orange-700 transition"
         >
           Add +
         </button>
