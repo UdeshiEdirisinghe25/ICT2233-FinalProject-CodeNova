@@ -1,78 +1,87 @@
 "use client";
 
-import React from "react";
-import { Search } from "lucide-react"; 
+import AdminSidebar from "@/app/components/AdminSidebar";
+import { useEffect, useState } from "react";
 
-export default function OrderManagementPage({ orders = [] }) {
-  // Fill missing rows so UI doesn't collapse (like your original table)
-  const filledOrders = [
-    ...orders,
-    ...Array(5 - orders.length).fill({}), // always 5 rows like your original screenshot
-  ];
+export default function AdminOrdersPage() {
+  const [orders, setOrders] = useState([]);
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    fetch("/api/orders/list", { cache: "no-store" })
+      .then((res) => res.json())
+      .then((data) => setOrders(data.orders || []))
+      .catch((err) => console.error(err));
+  }, []);
+
+  const filteredOrders = orders.filter(
+    (o) =>
+      o.full_name?.toLowerCase().includes(search.toLowerCase()) ||
+      o.items?.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <div className="w-full bg-white p-8 md:p-12 lg:p-16">
-      {/* Header */}
-      <header className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Orders</h1>
-        <p className="text-gray-500 mt-1">Manage and track customer orders</p>
-      </header>
+    <div className="flex min-h-screen bg-gray-100">
+      <div className="flex-1 p-8">
+        <div className="bg-white rounded-xl p-8 shadow-md">
+          <h1 className="text-3xl font-bold mb-1 text-[#1a1a1a]">Orders</h1>
+          <p className="text-gray-800 mb-6 font-medium">Manage and track customer orders</p>
 
-      {/* Search Bar */}
-      <div className="flex items-center border border-gray-300 rounded-md p-2 w-full max-w-sm mb-10 shadow-sm">
-        <Search className="w-5 h-5 text-gray-500 mr-2" /> {/* ✔ Only icon */}
-        <input
-          type="text"
-          placeholder="Search Orders"
-          className="flex-grow border-none outline-none text-gray-700 placeholder-gray-400"
-        />
-      </div>
+          {/* Search bar */}
+          
+          <div className="flex justify-between items-center mb-4">
+            <input
+              type="text"
+              placeholder="Search Orders"
+              className="border rounded-lg px-4 py-2 w-1/3 focus:outline-none focus:ring text-black"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
 
-      {/* Scrollable Table */}
-      <div className="w-full overflow-x-auto rounded-lg border border-gray-200 shadow-md">
-        <table className="min-w-[1200px] divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer Name</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Address</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Email</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Phone</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Items</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Payment Method</th>
-            </tr>
-          </thead>
-
-          <tbody className="bg-white divide-y divide-gray-100">
-            {filledOrders.map((order, index) => (
-              <tr key={order.id || `empty-${index}`} className="hover:bg-gray-50 h-16">
-                <td className="px-6 py-4 text-sm font-medium text-gray-900">
-                  {order.id ? `#${order.id}` : ""}
-                </td>
-                <td className="px-6 py-4 text-sm">{order.customerName || ""}</td>
-                <td className="px-6 py-4 text-sm text-gray-500">{order.address || ""}</td>
-                <td className="px-6 py-4 text-sm text-gray-500">{order.email || ""}</td>
-                <td className="px-6 py-4 text-sm text-gray-500">{order.phone || ""}</td>
-                <td className="px-6 py-4 text-sm text-gray-500">{order.items || ""}</td>
-                <td className="px-6 py-4 text-sm font-semibold text-gray-900">
-                  {order.total ? `$${order.total.toFixed(2)}` : ""}
-                </td>
-                <td className="px-6 py-4 text-sm text-gray-500">{order.date || ""}</td>
-                <td className="px-6 py-4 text-sm">
-                  {order.paymentMethod === "Card" ? (
-                    <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Card</span>
-                  ) : order.paymentMethod === "Cash" ? (
-                    <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-full">Cash</span>
-                  ) : (
-                    ""
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          {/* table */}
+          <div
+            className="overflow-auto mt-6 border"
+            style={{ maxHeight: "400px", minWidth: "100%", width: "100%" }}
+          >
+            <table className="w-full text-left border-collapse min-w-[1200px]">
+              <thead>
+                <tr className="border-b text-black font-semibold bg-gray-100 sticky top-0">
+                  <th className="py-2 px-3">ID</th>
+                  <th className="py-2 px-3">Customer</th>
+                  <th className="py-2 px-3">Address</th>
+                  <th className="py-2 px-3">Phone</th>
+                  <th className="py-2 px-3">Items</th>
+                  <th className="py-2 px-3">Total</th>
+                  <th className="py-2 px-3">Date</th>
+                  <th className="py-2 px-3">Payment</th>
+                </tr>
+              </thead>
+              <tbody className="text-gray-900">
+                {filteredOrders.map((order) => (
+                  <tr key={order.id} className="border-b hover:bg-gray-50">
+                    <td className="py-3 px-3 font-medium">#{order.id}</td>
+                    <td className="py-3 px-3 font-medium">{order.full_name}</td>
+                    <td className="py-3 px-3 text-gray-700">{order.address}</td>
+                    <td className="py-3 px-3 text-gray-700">{order.phone}</td>
+                    <td className="py-3 px-3 text-gray-700">{order.items}</td>
+                    <td className="py-3 px-3 font-medium">
+                      {order.total ? Number(order.total).toFixed(2) : "0.00"}
+                    </td>
+                    <td className="py-3 px-3 text-gray-700">
+                      {order.created_at
+                        ? new Date(order.created_at).toLocaleString()
+                        : ""}
+                    </td>
+                    <td className="py-3 px-3 text-gray-700">
+                      {order.payment_method === "bank" ? "Bank Transfer" : "Cash on Delivery"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   );

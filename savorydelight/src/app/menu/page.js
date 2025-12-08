@@ -2,35 +2,24 @@
 
 import React, { useEffect, useState } from "react";
 import MenuItemCard from "@/app/components/MenuItemCard";
+import useCart from "@/lib/useCart"; 
 
 const categories = ["All","Appetizers","Salads","Burgers","Pizza","Pasta","Desserts","Beverages"];
 
 export default function Menu() {
   const [menuItems, setMenuItems] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch menu from API
+  const { addToCart } = useCart();  
+
+  // Fetch menu items
   useEffect(() => {
     fetch("/api/menu/list", { cache: 'no-store' })
-
       .then(res => res.json())
       .then(data => setMenuItems(data.items))
       .catch(err => console.error(err));
   }, []);
-
-  const handleAddToCart = (item) => {
-    setCartItems(prev => {
-      const exist = prev.find(i => i.id === item.id);
-      if (exist) {
-        return prev.map(i =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      }
-      return [...prev, { ...item, quantity: 1 }];
-    });
-  };
 
   const filteredItems =
     selectedCategory === "All"
@@ -56,7 +45,7 @@ export default function Menu() {
         />
       </div>
 
-      {/* Category buttons */}
+      {/* Categories */}
       <div className="flex flex-wrap justify-center gap-3 mb-8">
         {categories.map(cat => (
           <button
@@ -78,7 +67,7 @@ export default function Menu() {
             description={item.description}
             price={item.price}
             image={item.image}
-            onAdd={() => handleAddToCart(item)}
+            onAdd={() => addToCart(item)}  
           />
         ))}
       </div>
