@@ -8,7 +8,7 @@ export async function POST(req) {
     const { email, password } = await req.json();
     if (!email || !password) return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
 
-    const r = await pool.query('SELECT * FROM Admin WHERE email=$1', [email]);
+    const r = await pool.query('SELECT * FROM admin WHERE email=$1', [email]);
     if (r.rowCount === 0) return NextResponse.json({ error: 'Invalid credentials' }, { status: 401 });
 
     const admin = r.rows[0];
