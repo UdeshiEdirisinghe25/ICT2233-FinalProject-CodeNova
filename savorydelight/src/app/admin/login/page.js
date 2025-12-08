@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { EyeIcon, EyeOffIcon } from '../../components/EyeIcon';
 
 async function login(email, password) {
 
@@ -56,6 +57,16 @@ export default function Login() {
     }
   };
 
+
+  // to show the password
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-[#d8a48f]">
       <div className="bg-white rounded-lg shadow-lg p-6 w-[600px]">
@@ -79,16 +90,28 @@ export default function Login() {
               className="w-3/4 border-b-1 border-gray-400 focus:outline-none focus:border-[#d8a48f] py-2"/>
           </div>
 
-          {/* Password */}
-          <div className="px-8">
+          <div className="px-8 relative">
             <label htmlFor="password" className="block font-bold">Password:</label>
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-3/4 border-b-1 border-gray-400 focus:outline-none focus:border-[#d8a48f] py-2"/>
+              className="w-3/4 border-b-1 border-gray-400 focus:outline-none focus:border-[#d8a48f] py-2 pr-10" />
+
+
+           <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute top-1/2 right-[25%] transform -translate-y-1/2 p-2 text-xl text-gray-500 hover:text-gray-700 focus:outline-none"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}>
+
+             {showPassword ? (
+                    <EyeOffIcon className="h-4 w-4" /> //To hide the password
+                ) : (
+                    <EyeIcon className="h-4 w-4" /> //to show the password
+                )}            
+            </button>
           </div>
 
           {/* Buttons */}
@@ -97,8 +120,7 @@ export default function Login() {
               type="button"
               onClick={() => {
                 setEmail('');
-                setPassword('');
-                }}
+                setPassword('');}}
               className="bg-gray-800 text-white font-semibold px-6 py-1 rounded-md hover:bg-gray-600 transition duration-150">
               Clear
             </button>
