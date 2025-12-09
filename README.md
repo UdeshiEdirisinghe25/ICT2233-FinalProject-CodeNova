@@ -69,6 +69,10 @@ The complete project source code (UI, API routes, admin logic, components, pages
 
 https://github.com/ICT-Courses/ict-2233-final-project-submission-codenova.git
 
+Deploye Link
+
+https://ict-2233-final-project-code-nova.vercel.app/
+
 Team CodeNova
 
 B.A.D.D.N.T.Balasooriya AF/22/0747 AR 113017 
