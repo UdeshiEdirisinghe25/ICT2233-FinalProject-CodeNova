@@ -2,16 +2,20 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation"; 
 import { FaBars, FaSignOutAlt, FaClipboardList } from "react-icons/fa";
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter(); 
+
+  const handleLogout = () => {
+    router.push('/admin/login'); 
+  };
 
   return (
     <aside className="w-64 h-screen bg-[#e1b097] flex flex-col p-6">
       
-      {/* Logo Section */}
       <div className="text-center mb-10 flex flex-col items-center">
         <Image
           src="/blackLogo.png"
@@ -24,7 +28,6 @@ export default function AdminSidebar() {
         <p className="text-sm text-gray-700">Dashboard</p>
       </div>
 
-      {/* Menu */}
       <nav className="flex flex-col gap-2">
         <Link
           href="/admin/menu"
@@ -45,13 +48,16 @@ export default function AdminSidebar() {
         </Link>
       </nav>
 
-      {/* Logout */}
       <div className="mt-auto">
-        <button className="flex items-center gap-3 bg-white rounded-lg px-4 py-2">
+        <button 
+          onClick={handleLogout}
+          className="flex items-center gap-3 bg-white rounded-lg px-4 py-2 text-black font-semibold hover:bg-gray-200"
+        >
           <FaSignOutAlt />
           Logout
         </button>
       </div>
+
     </aside>
   );
 }
